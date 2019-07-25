@@ -42,9 +42,7 @@ class WT_Role {
 	/**
 	 * The HTML form code to display in user form.
 	 */
-	public function html_form_code( $atts ) {
-
-		var_dump($atts);
+	public function html_show_users( $atts ) {
 
 		if ( empty( $atts ) ) {
 			$role_in = array( 'manager', 'staff' );
@@ -102,7 +100,7 @@ class WT_Role {
 
 		ob_start();
 
-		$this->html_form_code( $atts );
+		$this->html_show_users( $atts );
 
 		return ob_get_clean();
 	}
