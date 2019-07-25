@@ -75,11 +75,14 @@ class WT_Role {
 			$paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
 		}
 
-		$limit = 1;
+		echo 'PG '; var_dump($paged);
+
+		$limit = 2;
 
 		$args = array(
 			'role__in'	=> $role_in,
 			'number'	=> $limit,
+			'offset'	=> $limit * $paged,
 			'paged'		=> $paged,
 		);
 
@@ -95,9 +98,11 @@ class WT_Role {
 
 			echo paginate_links( array(
 				'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ), //'%_%',
-				'format' => '/page/%#%',
+				'format' => '?paged=%#%',
 				'current' => max( 1, $paged ),
 				'total' => ceil($user_query->get_total()/$limit),
+				'prev_text' => __( '<< Calm Down' ),
+				'next_text' => __( 'Go Loud >>' ),
 				// 'add_args' => 'input-text=' . $input_text,
 			) );
 
