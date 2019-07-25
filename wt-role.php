@@ -91,7 +91,7 @@ class WT_Role {
 		if ( ! empty( $user_query->get_results() ) ) {
 
 			$total_users = $user_query->get_total();
-			
+
 			printf( _n( 'Found %s person', 'Found %s people', $total_users, 'text-domain' ), number_format_i18n( $total_users ) );
 
 			foreach ( $user_query->get_results() as $user ) {
@@ -106,8 +106,6 @@ class WT_Role {
 				$big = 6950;
 				$base = str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) );
 			}
-
-			//echo get_pagenum_link($big);
 
 			echo paginate_links( array(
 				'base' => $base,
