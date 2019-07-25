@@ -65,42 +65,52 @@ class WT_Role {
 			}
 		}
 
-
-
 		//$paged = ( isset( $_GET['up']) ) ? $_GET['up'] : 1;
 
-		if( is_front_page() ) {
+		if( is_front_page() OR is_single() ) {
 			$paged = ( get_query_var('page') ) ? get_query_var('page') : 1;
 		}else {
 			$paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
 		}
 
-		echo 'PG '; var_dump($paged);
+		//$paged = ( get_query_var('page') ) ? get_query_var('page') : 1;
 
-		$limit = 2;
+		//echo 'PG '; var_dump($paged);
+
+		$limit = 1;
 
 		$args = array(
 			'role__in'	=> $role_in,
 			'number'	=> $limit,
-			'offset'	=> $limit * $paged,
+			'offset'	=> $limit * ($paged - 1),
 			'paged'		=> $paged,
 		);
 
 		$user_query = new WP_User_Query( $args );
 
 		if ( ! empty( $user_query->get_results() ) ) {
+			$total_users = $user_query->get_total();
+			printf( _n( 'Found %s person', 'Found %s people', $total_users, 'text-domain' ), number_format_i18n( $total_users ) );
 			foreach ( $user_query->get_results() as $user ) {
 				echo '<p>' . $user->display_name . '</p>';
-				var_dump($user);
+				//var_dump($user);
 			}
 
-			$big = 999999999;
+			if ( is_single() ) {
+				$base = get_permalink().'%#%/';
+			}
+			else {
+				$big = 6950;
+				$base = str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) );
+			}
+
+			//echo get_pagenum_link($big);
 
 			echo paginate_links( array(
-				'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ), //'%_%',
+				'base' => $base,
 				'format' => '?paged=%#%',
 				'current' => max( 1, $paged ),
-				'total' => ceil($user_query->get_total()/$limit),
+				'total' => ceil( $total_users / $limit ),
 				'prev_text' => __( '<< Calm Down' ),
 				'next_text' => __( 'Go Loud >>' ),
 				// 'add_args' => 'input-text=' . $input_text,
