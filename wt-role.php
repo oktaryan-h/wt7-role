@@ -89,8 +89,11 @@ class WT_Role {
 		$user_query = new WP_User_Query( $args );
 
 		if ( ! empty( $user_query->get_results() ) ) {
+
 			$total_users = $user_query->get_total();
+			
 			printf( _n( 'Found %s person', 'Found %s people', $total_users, 'text-domain' ), number_format_i18n( $total_users ) );
+
 			foreach ( $user_query->get_results() as $user ) {
 				echo '<p>' . $user->display_name . '</p>';
 				//var_dump($user);
