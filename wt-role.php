@@ -67,7 +67,14 @@ class WT_Role {
 
 
 
-		$paged = ( isset( $_GET['up']) ) ? $_GET['up'] : 1;
+		//$paged = ( isset( $_GET['up']) ) ? $_GET['up'] : 1;
+
+		if( is_front_page() ) {
+			$paged = ( get_query_var('page') ) ? get_query_var('page') : 1;
+		}else {
+			$paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+		}
+
 		$limit = 1;
 
 		$args = array(
@@ -81,11 +88,14 @@ class WT_Role {
 		if ( ! empty( $user_query->get_results() ) ) {
 			foreach ( $user_query->get_results() as $user ) {
 				echo '<p>' . $user->display_name . '</p>';
+				var_dump($user);
 			}
 
+			$big = 999999999;
+
 			echo paginate_links( array(
-				'base' => '%_%',
-				'format' => '?up=%#%',
+				'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ), //'%_%',
+				'format' => '/page/%#%',
 				'current' => max( 1, $paged ),
 				'total' => ceil($user_query->get_total()/$limit),
 				// 'add_args' => 'input-text=' . $input_text,
